@@ -1,41 +1,53 @@
-
 import streamlit as st
 
-# 🎨 Background Color
-st.markdown("""
-    <style>
-    .stApp {
-        background-color: #f0f4f8;
+st.set_page_config(page_title="BulkAI", page_icon="💪")
+
+st.title("💪 BulkAI - AI Weight Gain Assistant")
+
+st.header("Enter Your Details")
+
+weight = st.number_input("Enter your weight (kg)", min_value=20.0)
+height = st.number_input("Enter your height (cm)", min_value=100.0)
+age = st.number_input("Enter your age", min_value=10)
+
+gender = st.selectbox("Select Gender", ["Female", "Male"])
+
+activity = st.selectbox(
+    "Activity Level",
+    ["Sedentary", "Lightly Active", "Moderately Active", "Very Active"]
+)
+
+if st.button("Generate Plan"):
+
+    # BMR calculation
+    if gender == "Female":
+        bmr = 10 * weight + 6.25 * height - 5 * age - 161
+    else:
+        bmr = 10 * weight + 6.25 * height - 5 * age + 5
+
+    activity_multiplier = {
+        "Sedentary": 1.2,
+        "Lightly Active": 1.375,
+        "Moderately Active": 1.55,
+        "Very Active": 1.725
     }
-    </style>
-""", unsafe_allow_html=True)
 
-# 💎 Stylish Centered Title
-st.markdown("<h1 style='text-align: center; color: #2c3e50;'>💪 BulkAI - Weight Gain Assistant</h1>", unsafe_allow_html=True)
+    maintenance = bmr * activity_multiplier[activity]
+    bulk_calories = maintenance + 400
+    protein = weight * 2
 
-# 🖼️ Banner Image
-st.image("https://images.unsplash.com/photo-1517836357463-d25dfeac3438", use_container_width=True)
+    st.success("🔥 Your Personalized Bulking Plan")
 
-st.divider()
+    st.write(f"🍽 Daily Calories Needed: {round(bulk_calories)} kcal")
+    st.write(f"🥩 Daily Protein Needed: {round(protein)} grams")
 
-st.subheader("📋 Enter Your Details")
+    st.subheader("📋 Simple Diet Suggestion")
 
-# 📦 Clean Column Layout
-col1, col2 = st.columns(2)
+    st.write("""
+    **Breakfast:** Milk + Banana + Peanut Butter  
+    **Lunch:** Rice + Dal + Sabzi + Curd  
+    **Evening Snack:** Peanut butter sandwich + Milk  
+    **Dinner:** Roti + Paneer/Chicken + Salad  
+    **Before Bed:** Glass of Milk
+    """)
 
-with col1:
-    weight = st.number_input("Enter your weight (kg)", min_value=20.0)
-    height = st.number_input("Enter your height (cm)", min_value=100.0)
-
-with col2:
-    age = st.number_input("Enter your age", min_value=10)
-    gender = st.selectbox("Select Gender", ["Female", "Male"])
-
-activity = st.selectbox("Activity Level", 
-                        ["Sedentary", "Lightly Active", "Moderately Active", "Very Active"])
-
-st.divider()
-
-# 🚀 Stylish Button
-if st.button("🚀 Generate My Plan"):
-    st.success("Your personalized weight gain plan is ready!")
